@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixie.cam Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--pink:#FFD6E7;--rose:#F8BBD0;--deep-pink:#F48FB1;--hot-pink:#E91E8C;--cream:#FFF8F5;--white:#FFFFFF;--text:#5C2D4E;--muted:#A0647A;--shadow:0 4px 24px rgba(233,30,140,0.1);}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;line-height:1.5;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;background:none;}
+.admin-nav{background:white;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 30px rgba(233,30,140,0.08);position:sticky;top:0;z-index:20;}
+.admin-nav h1{font-family:'Pacifico',cursive;font-size:1.5rem;color:var(--hot-pink);margin:0;}
+.admin-nav a{font-weight:700;color:var(--muted);padding:0.6rem 1rem;border-radius:999px;transition:all .2s;}
+.admin-nav a:hover{background:var(--pink);color:var(--hot-pink);}
+.admin-wrap{background:#FFF0F8;min-height:calc(100vh - 84px);padding:2rem;}
+.admin-header{background:var(--hot-pink);color:white;border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.admin-header h2{font-family:'Pacifico',cursive;font-size:1.4rem;margin:0;}
+.admin-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;}
+.admin-card{background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(233,30,140,0.08);}
+.admin-card h3{font-weight:900;color:var(--text);margin-bottom:1rem;font-size:1rem;border-bottom:2px solid var(--pink);padding-bottom:0.5rem;}
+.booking-row{display:flex;justify-content:space-between;align-items:center;padding:0.85rem;border-radius:10px;margin-bottom:0.5rem;background:var(--cream);font-size:0.82rem;}
+.booking-row .name{font-weight:800;color:var(--text);}
+.booking-row .dates{color:var(--muted);}
+.status-badge{padding:0.25rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:800;}
+.status-badge.active{background:#D4EDDA;color:#155724;}
+.status-badge.pending{background:#FFF3CD;color:#856404;}
+.status-badge.done{background:#D1ECF1;color:#0C5460;}
+.admin-action{display:flex;gap:0.4rem;}
+.icon-btn{background:none;border:none;cursor:pointer;font-size:1rem;padding:4px;border-radius:6px;transition:background 0.15s;}
+.icon-btn:hover{background:var(--pink);}
+.stat-mini{background:linear-gradient(135deg,#FFD6E7,#F8BBD0);border-radius:12px;padding:1rem;text-align:center;margin-bottom:0.75rem;}
+.stat-mini .num{font-size:1.8rem;font-weight:900;color:var(--hot-pink);}
+.stat-mini .lbl{font-size:0.75rem;color:var(--muted);font-weight:700;}
+.cal-wrap{background:white;border-radius:24px;padding:1.5rem;box-shadow:var(--shadow);}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;}
+.cal-month{font-weight:900;color:var(--text);font-size:1rem;}
+.cal-nav{background:var(--pink);border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;color:var(--hot-pink);cursor:pointer;transition:background 0.2s;}
+.cal-nav:hover{background:var(--rose);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day-label{text-align:center;font-size:0.7rem;font-weight:800;color:var(--muted);padding:4px 0;}
+.cal-day{text-align:center;padding:6px 4px;border-radius:8px;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.cal-day.available{color:var(--text);background:transparent;}
+.cal-day.booked{background:var(--rose);color:#fff;cursor:default;text-decoration:line-through;}
+.form-row{margin-bottom:1rem;}
+.form-row label{display:block;font-size:0.82rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;}
+.form-row input,.form-row select{width:100%;padding:0.75rem 1rem;border:2px solid var(--rose);border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.9rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;}
+.form-row input:focus,.form-row select:focus{border-color:var(--hot-pink);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.btn-sm{padding:0.6rem 1.2rem;border-radius:50px;font-weight:800;font-size:0.82rem;border:none;transition:all 0.2s;text-align:center;cursor:pointer;}
+.btn-sm.primary{background:var(--hot-pink);color:#fff;box-shadow:0 3px 12px rgba(233,30,140,0.25);}
+.btn-sm.primary:hover{box-shadow:0 5px 18px rgba(233,30,140,0.4);}
+.hidden{display:none;}
+@media(max-width:768px){.admin-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="admin-nav">
+  <h1>Pixie<span style="color:var(--deep-pink)">.cam</span> Admin</h1>
+  <a href="pixie_cam_website.html">Return to public site</a>
+</nav>
+<div class="admin-wrap">
+  <div class="admin-header">
+    <h2>Pixie.cam Admin 🔮</h2>
+    <span style="font-size:0.95rem;opacity:0.85">Dashboard</span>
+  </div>
+  <div class="admin-grid">
+    <div>
+      <div class="admin-card">
+        <h3>📋 Current Bookings</h3>
+        <div id="admin-bookings"></div>
+        <button class="btn-sm primary" style="margin-top:1rem;width:100%" onclick="showAddBooking()">+ Add Booking</button>
+        <div id="add-booking-form" class="hidden" style="margin-top:1rem;padding:1rem;background:var(--cream);border-radius:12px">
+          <div class="form-grid">
+            <div class="form-row"><label>Customer Name</label><input type="text" id="new-name" placeholder="Full name"></div>
+            <div class="form-row"><label>Camera</label><select id="new-cam"><option value="1">Camera #1</option><option value="2">Camera #2</option></select></div>
+            <div class="form-row"><label>From</label><input type="date" id="new-from"></div>
+            <div class="form-row"><label>To</label><input type="date" id="new-to"></div>
+          </div>
+          <button class="btn-sm primary" style="width:100%;margin-top:0.5rem" onclick="addAdminBooking()">Add Booking</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="stat-mini"><div class="num" id="stat-total">2</div><div class="lbl">Total Bookings</div></div>
+      <div class="stat-mini"><div class="num" id="stat-active">1</div><div class="lbl">Active Rentals</div></div>
+      <div class="stat-mini"><div class="num">2</div><div class="lbl">Cameras in Fleet</div></div>
+      <div class="admin-card" style="margin-top:1rem">
+        <h3>📅 Mini Calendar</h3>
+        <div id="admin-cal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const STORAGE_KEY='pixie_cam_bookings';
+let state = {
+  bookings: {
+    1: [{from:new Date(2026,5,10),to:new Date(2026,5,13),name:'Marielle Santos'}],
+    2: [{from:new Date(2026,5,7),to:new Date(2026,5,8),name:'Andrea Lim'}]
+  }
+};
+function loadBookingsFromStorage(){
+  const stored=localStorage.getItem(STORAGE_KEY);
+  if(stored){
+    try{
+      const data=JSON.parse(stored);
+      state.bookings[1]=(data.bookings[1]||[]).map((b,i)=>({...b,from:new Date(b.from),to:new Date(b.to),id:b.id||`legacy-1-${i}`}));
+      state.bookings[2]=(data.bookings[2]||[]).map((b,i)=>({...b,from:new Date(b.from),to:new Date(b.to),id:b.id||`legacy-2-${i}`}));
+    }catch(e){console.error('Failed to load bookings:',e);}
+  }
+}
+function renderBookingsList(){
+  const list=document.getElementById('admin-bookings');
+  list.innerHTML='';
+  [1,2].forEach(cam=>{
+    state.bookings[cam].forEach(b=>{
+      const dateStr=b.from.toLocaleDateString()+' – '+b.to.toLocaleDateString();
+      const status=b.status||'active';
+      const row=document.createElement('div');
+      row.className='booking-row';
+      row.setAttribute('data-booking-id',b.id);
+      row.setAttribute('data-cam',cam);
+      row.innerHTML=`
+        <div style="flex:1">
+          <div class="name">${b.name||'Unknown'}</div>
+          <div class="dates" style="font-size:0.75rem;color:var(--muted)">${dateStr} · Camera #${cam}</div>
+          ${b.email?`<div style="font-size:0.75rem;color:var(--muted)">${b.email}</div>`:''}
+          ${b.phone?`<div style="font-size:0.75rem;color:var(--muted)">${b.phone}</div>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="status-badge ${status}">${status.charAt(0).toUpperCase()+status.slice(1)}</span>
+          <div class="admin-action">
+            <button class="icon-btn" onclick="markDone(this)" title="Mark Done">✅</button>
+            <button class="icon-btn" onclick="deleteBooking(this)" title="Delete">🗑</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  });
+}
+function saveBookingsToStorage(){
+  const data={
+    bookings:{
+      1:state.bookings[1].map(b=>({from:b.from.toISOString(),to:b.to.toISOString(),name:b.name,email:b.email||'',phone:b.phone||'',facebook:b.facebook||'',instagram:b.instagram||'',notes:b.notes||'',status:b.status||'active',id:b.id})),
+      2:state.bookings[2].map(b=>({from:b.from.toISOString(),to:b.to.toISOString(),name:b.name,email:b.email||'',phone:b.phone||'',facebook:b.facebook||'',instagram:b.instagram||'',notes:b.notes||'',status:b.status||'active',id:b.id}))
+    }
+  };
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+}
+function isBooked(cam,d){
+  return state.bookings[cam].some(b=>{
+    const dd=new Date(d);dd.setHours(0,0,0,0);
+    const f=new Date(b.from);f.setHours(0,0,0,0);
+    const t=new Date(b.to);t.setHours(0,0,0,0);
+    return dd>=f&&dd<=t;
+  });
+}
+function markDone(btn){
+  const row=btn.closest('.booking-row');
+  const badge=row.querySelector('.status-badge');
+  const bookingId=row.getAttribute('data-booking-id');
+  const cam=parseInt(row.getAttribute('data-cam'),10);
+  const booking=state.bookings[cam].find(b=>String(b.id)===bookingId);
+  if(booking){
+    const isDone=booking.status==='done';
+    booking.status=isDone?'active':'done';
+    saveBookingsToStorage();
+    badge.className='status-badge '+booking.status;
+    badge.textContent=booking.status.charAt(0).toUpperCase()+booking.status.slice(1);
+    updateStats();
+  }
+}
+function deleteBooking(btn){
+  const row=btn.closest('.booking-row');
+  const bookingId=row.getAttribute('data-booking-id');
+  const cam=parseInt(row.getAttribute('data-cam'),10);
+  row.style.opacity='0.3';
+  setTimeout(()=>{
+    state.bookings[cam]=state.bookings[cam].filter(b=>String(b.id)!==bookingId);
+    saveBookingsToStorage();
+    row.remove();
+    updateStats();
+    renderAdminCal();
+  },400);
+}
+function rebuildStateFromUI(){
+  state.bookings[1]=state.bookings[1].filter(b=>!b._deleted);
+  state.bookings[2]=state.bookings[2].filter(b=>!b._deleted);
+  saveBookingsToStorage();
+}
+function showAddBooking(){document.getElementById('add-booking-form').classList.toggle('hidden');}
+function addAdminBooking(){
+  const name=document.getElementById('new-name').value.trim();
+  const cam=parseInt(document.getElementById('new-cam').value,10);
+  const from=document.getElementById('new-from').value;
+  const to=document.getElementById('new-to').value;
+  if(!from||!to||!name){alert('Please fill in all fields.');return;}
+  state.bookings[cam].push({from:new Date(from),to:new Date(to),name,email:'',phone:'',facebook:'',instagram:'',notes:'',status:'active',id:Date.now()});
+  saveBookingsToStorage();
+  document.getElementById('add-booking-form').classList.add('hidden');
+  document.getElementById('new-name').value='';
+  document.getElementById('new-from').value='';
+  document.getElementById('new-to').value='';
+  renderBookingsList();
+  updateStats();
+  renderAdminCal();
+}
+function renderAdminCal(){
+  const m=new Date().getMonth(),y=new Date().getFullYear();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const d1=new Date(y,m,1);const daysInM=new Date(y,m+1,0).getDate();const start=d1.getDay();
+  let html=`<div style="font-weight:900;color:var(--text);margin-bottom:0.75rem;font-size:0.85rem">${months[m]} ${y}</div><div class="cal-grid">`;
+  days.forEach(d=>html+=`<div class="cal-day-label">${d}</div>`);
+  for(let i=0;i<start;i++)html+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInM;d++){
+    const date=new Date(y,m,d);
+    const b1=isBooked(1,date),b2=isBooked(2,date);
+    const cls=b1||b2?'booked':'available';
+    html+=`<div class="cal-day ${cls}" title="${b1?'Cam1 ':''}${b2?'Cam2':''}">${d}</div>`;
+  }
+  html+=`</div>`;
+  document.getElementById('admin-cal').innerHTML=html;
+}
+function updateStats(){
+  const rows=document.querySelectorAll('#admin-bookings .booking-row');
+  document.getElementById('stat-total').textContent=rows.length;
+  const activeCount=[...rows].filter(r=>r.querySelector('.status-badge').textContent==='Active').length;
+  document.getElementById('stat-active').textContent=activeCount;
+}   
+window.addEventListener('DOMContentLoaded',()=>{loadBookingsFromStorage();renderBookingsList();renderAdminCal();updateStats();});
+</script>
+</body>
+</html>
