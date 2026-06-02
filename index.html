@@ -129,21 +129,9 @@ section{padding:5rem 2rem}
 
 /* GALLERY */
 .gallery-grid{columns:3;gap:1rem;margin-top:2rem}
-<<<<<<< HEAD
-.gallery-item{
-    padding:0;
-}
-
-.gallery-item img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-=======
-.gallery-item{break-inside:avoid;margin-bottom:1rem;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,var(--pink),var(--rose));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.2s;box-shadow:var(--shadow)}
+.gallery-item{break-inside:avoid;margin-bottom:1rem;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,var(--pink),var(--rose));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.2s;box-shadow:var(--shadow);padding:0;}
 .gallery-item:hover{transform:scale(1.02)}
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
 .gallery-placeholder{padding:2rem;text-align:center;font-size:3.5rem}
 .polaroid{background:white;padding:1rem 1rem 2.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:rotate(-2deg)}
 .polaroid:nth-child(even){transform:rotate(2deg)}
@@ -484,22 +472,15 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
       <div class="section-title">Our gallery 🌸</div>
       <p class="section-sub">Real shots taken by our customers. Every moment, beautifully captured.</p>
       <div class="gallery-grid">
-<<<<<<< HEAD
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424566/1_fg6fi4.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424842/2_mxdxcb.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/3_dihads.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/4_evrsko.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/5_vc2msh.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424840/6_rynyop.jpg" alt="Sample Shot"></div> <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-=======
-        <div class="gallery-item polaroid" style="height:200px"><div class="gallery-placeholder">🌅</div></div>
-        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder">🌸</div></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424566/1_fg6fi4.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424842/2_mxdxcb.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/3_dihads.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
         <div class="gallery-item polaroid" style="height:180px"><div class="gallery-placeholder">🎪</div></div>
         <div class="gallery-item" style="height:220px"><div class="gallery-placeholder">🍰</div></div>
-        <div class="gallery-item polaroid" style="height:160px"><div class="gallery-placeholder">🌊</div></div>
-        <div class="gallery-item" style="height:190px"><div class="gallery-placeholder">🎡</div></div>
         <div class="gallery-item polaroid" style="height:170px"><div class="gallery-placeholder">🌻</div></div>
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
         <div class="gallery-item" style="height:200px"><div class="gallery-placeholder">🎶</div></div>
         <div class="gallery-item polaroid" style="height:150px"><div class="gallery-placeholder">🍓</div></div>
       </div>
@@ -687,23 +668,29 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
   </div>
 </div>
 
-<<<<<<< HEAD
 <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <script>
 const STORAGE_KEY='pixie_cam_bookings';
-const FIREBASE_CONFIG={
-  apiKey: "AIzaSyC3yURmqHxOy9ZBKPJ-h4ADY0PzGDz1T3Q",
-  authDomain: "pixiecam-e4bc7.firebaseapp.com",
-  projectId: "pixiecam-e4bc7",
-  storageBucket: "pixiecam-e4bc7.firebasestorage.app",
-  messagingSenderId: "68107632780",
-  appId: "1:68107632780:web:867a4c81ac0f0ab326bba9",
-  measurementId: "G-XGFS2B35FN"
+const FIREBASE_CONFIG=window.FIREBASE_CONFIG||{
+  apiKey:'YOUR_API_KEY',
+  authDomain:'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId:'YOUR_PROJECT_ID',
+  storageBucket:'YOUR_PROJECT_ID.appspot.com',
+  messagingSenderId:'YOUR_MESSAGING_SENDER_ID',
+  appId:'YOUR_APP_ID'
 };
 let firebaseDb=null;
 let firebaseBookings=null;
+let state = {
+  bookings: {
+    1: [],
+    2: []
+  },
+  currentCam: 1
+};
 function firebaseConfigured(){
   return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.includes('YOUR_');
 }
@@ -756,18 +743,6 @@ async function addBookingToFirebase(booking){
 }
 function loadBookingsFromStorage(){
   if(setupFirebase()) return;
-=======
-<script>
-const STORAGE_KEY='pixie_cam_bookings';
-let state = {
-  bookings: {
-    1: [{from:new Date(2026,5,10),to:new Date(2026,5,13),name:'Marielle Santos'}],
-    2: [{from:new Date(2026,5,7),to:new Date(2026,5,8),name:'Andrea Lim'}]
-  },
-  currentCam: 1
-};
-function loadBookingsFromStorage(){
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
   const stored=localStorage.getItem(STORAGE_KEY);
   if(stored){
     try{
@@ -778,10 +753,7 @@ function loadBookingsFromStorage(){
   }
 }
 function saveBookingsToStorage(){
-<<<<<<< HEAD
   if(setupFirebase()) return;
-=======
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
   const data={
     bookings:{
       1:state.bookings[1].map(b=>({from:b.from.toISOString(),to:b.to.toISOString(),name:b.name,email:b.email||'',phone:b.phone||'',facebook:b.facebook||'',instagram:b.instagram||'',notes:b.notes||'',status:b.status||'pending',id:b.id})),
@@ -790,16 +762,6 @@ function saveBookingsToStorage(){
   };
   localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
 }
-<<<<<<< HEAD
-let state = {
-  bookings: {
-    1: [{from:new Date(2026,5,10),to:new Date(2026,5,13),name:'Marielle Santos'}],
-    2: [{from:new Date(2026,5,7),to:new Date(2026,5,8),name:'Andrea Lim'}]
-  },
-  currentCam: 1
-};
-=======
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
 
 function showPage(id) {
   loadBookingsFromStorage();
@@ -893,11 +855,7 @@ function renderModalCal(){
 function modalPrev(){modalCal.month--;if(modalCal.month<0){modalCal.month=11;modalCal.year--;}renderModalCal();}
 function modalNext(){modalCal.month++;if(modalCal.month>11){modalCal.month=0;modalCal.year++;}renderModalCal();}
 
-<<<<<<< HEAD
 async function submitBooking(e){
-=======
-function submitBooking(e){
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
   e.preventDefault();
   const form=document.getElementById('booking-form-el');
   const name=form.querySelector('input[type="text"]').value.trim();
@@ -910,7 +868,6 @@ function submitBooking(e){
   const r=document.getElementById('return-date').value;
   const cam=parseInt(document.getElementById('cam-select').value);
   if(p&&r&&name&&email){
-<<<<<<< HEAD
     const newBooking={from:new Date(p),to:new Date(r),cam,name,email,phone,facebook:fb,instagram:ig,notes,status:'pending'};
     if(setupFirebase()){
       await addBookingToFirebase(newBooking);
@@ -920,11 +877,6 @@ function submitBooking(e){
       saveBookingsToStorage();
     }
     form.classList.add('hidden');
-=======
-    state.bookings[cam].push({from:new Date(p),to:new Date(r),name,email,phone,facebook:fb,instagram:ig,notes,status:'pending',id:Date.now()});
-    saveBookingsToStorage();
-    document.getElementById('booking-form-el').classList.add('hidden');
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
     document.getElementById('booking-confirm').classList.remove('hidden');
   }else{
     alert('Please fill in name, email, pickup and return dates.');
@@ -967,11 +919,8 @@ function sendContactMessage(e){
   return true;
 }
 
-<<<<<<< HEAD
 window.addEventListener('DOMContentLoaded',()=>{startBookingSync();});
 
-=======
->>>>>>> 0d49c28dff7470bf6867d157b77a71147c0c9bd4
 document.getElementById('cal-modal').addEventListener('click',function(e){if(e.target===this)closeCalModal();});
 </script>
 </body>
