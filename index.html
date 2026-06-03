@@ -264,8 +264,8 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
             <div class="cam-price">₱269/day</div>
           </div>
           <div class="hero-cam-card" style="grid-column:span 2;padding:1rem">
-            <div style="font-size:0.82rem;color:var(--muted);font-weight:700">✦ Deposit ✦</div>
-            <div style="font-size:1rem;font-weight:900;color:var(--text)">₱169 refundable</div>
+            <div style="font-size:0.82rem;color:var(--muted);font-weight:700">✦ Booking Perks ✦</div>
+            <div style="font-size:1rem;font-weight:900;color:var(--text)">No deposit needed</div>
           </div>
         </div>
       </div>
@@ -296,8 +296,8 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
             </div>
             <div class="cam-pricing">
               <div class="price-item"><div class="label">Per Day</div><div class="amount">₱269</div></div>
-              <div class="price-item"><div class="label">3 Days</div><div class="amount">₱799</div></div>
-              <div class="price-item"><div class="label">1 Week</div><div class="amount">₱1,399</div></div>
+              <div class="price-item"><div class="label">4-6 Days</div><div class="amount">₱239/day</div></div>
+              <div class="price-item"><div class="label">7+ Days</div><div class="amount">₱199/day</div></div>
             </div>
             <div class="cam-actions">
               <button class="btn-sm ghost" onclick="openCalModal(1)">View Calendar 🗓</button>
@@ -323,8 +323,8 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
             </div>
             <div class="cam-pricing">
               <div class="price-item"><div class="label">Per Day</div><div class="amount">₱269</div></div>
-              <div class="price-item"><div class="label">3 Days</div><div class="amount">₱799</div></div>
-              <div class="price-item"><div class="label">1 Week</div><div class="amount">₱1,399</div></div>
+              <div class="price-item"><div class="label">4-6 Days</div><div class="amount">₱239/day</div></div>
+              <div class="price-item"><div class="label">7+ Days</div><div class="amount">₱199/day</div></div>
             </div>
             <div class="cam-actions">
               <button class="btn-sm ghost" onclick="openCalModal(2)">View Calendar 🗓</button>
@@ -386,7 +386,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
           </div>
           <div style="background:white;border-radius:20px;padding:1.5rem;box-shadow:var(--shadow)">
             <h4 style="font-weight:900;color:var(--text);margin-bottom:1rem">Camera #1 Details</h4>
-            <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem">The Kodak PixPro FZ55 in pink. Includes: SD card, AA batteries (4x), neck strap, USB cable, and original pouch. Security deposit: ₱500 (returned upon safe return).</p>
+            <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem">The Kodak PixPro FZ55 in pink. Includes: SD card, AA batteries (4x), neck strap, USB cable, and original pouch.</p>
             <button class="btn-sm primary" style="width:100%;margin-bottom:0.5rem" onclick="showPage('booking');setCamera(1)">Book Camera #1 ✨</button>
           </div>
         </div>
@@ -405,7 +405,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
           </div>
           <div style="background:white;border-radius:20px;padding:1.5rem;box-shadow:var(--shadow)">
             <h4 style="font-weight:900;color:var(--text);margin-bottom:1rem">Camera #2 Details</h4>
-            <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem">The second Kodak PixPro FZ55 in pink. Includes: SD card, AA batteries (4x), neck strap, USB cable, and original pouch. Security deposit: ₱500 (returned upon safe return).</p>
+            <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem">The second Kodak PixPro FZ55 in pink. Includes: SD card, AA batteries (4x), neck strap, USB cable, and original pouch.</p>
             <button class="btn-sm primary" style="width:100%;margin-bottom:0.5rem" onclick="showPage('booking');setCamera(2)">Book Camera #2 ✨</button>
           </div>
         </div>
@@ -425,8 +425,9 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
       <div class="booking-form">
         <div id="booking-confirm" class="confirm-box hidden">
           <div class="checkmark">🎉</div>
-          <h3>Booking Requested!</h3>
-          <p>We'll reach out to you shortly via your provided contact to confirm. Check your email! 💕</p>
+          <h3>Booking Request Sent!</h3>
+          <p>We'll reach out to you shortly via your provided contact to confirm. Your booking is still pending on the admin side.</p>
+          <p style="font-size:0.9rem;color:var(--muted);margin-top:0.5rem">Selected dates will only become unavailable once the admin accepts and makes the booking active.</p>
           <button class="btn-primary" style="margin-top:1.5rem" onclick="resetBooking()">Book Another</button>
         </div>
         <form id="booking-form-el" onsubmit="submitBooking(event)">
@@ -488,7 +489,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
           <div class="form-row" id="price-preview" style="background:linear-gradient(135deg,var(--pink),var(--rose));border-radius:12px;padding:1rem;display:none;text-align:center">
             <div style="font-size:0.78rem;font-weight:800;color:var(--muted)">ESTIMATED TOTAL</div>
             <div style="font-size:1.8rem;font-weight:900;color:var(--hot-pink)" id="price-total">₱0</div>
-            <div style="font-size:0.75rem;color:var(--muted)">+ ₱169 refundable/div>
+            <div style="font-size:0.75rem;color:var(--muted)">No deposit required.</div>
           </div>
           <div class="form-row">
             <label>Notes / Special Requests</label>
@@ -510,16 +511,15 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
       <p class="section-sub">Real shots taken by our customers. Every moment, beautifully captured.</p>
       <div class="gallery-grid">
         <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424566/1_fg6fi4.jpg" alt="Sample Shot"></div>
-        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
         <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424842/2_mxdxcb.jpg" alt="Sample Shot"></div>
-        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
         <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/3_dihads.jpg" alt="Sample Shot"></div>
-        <div class="gallery-item" style="height:140px"><div class="gallery-placeholder"></div></div>
-        <div class="gallery-item polaroid" style="height:180px"><div class="gallery-placeholder">🎪</div></div>
-        <div class="gallery-item" style="height:220px"><div class="gallery-placeholder">🍰</div></div>
-        <div class="gallery-item polaroid" style="height:170px"><div class="gallery-placeholder">🌻</div></div>
-        <div class="gallery-item" style="height:200px"><div class="gallery-placeholder">🎶</div></div>
-        <div class="gallery-item polaroid" style="height:150px"><div class="gallery-placeholder">🍓</div></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/4_evrsko.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424841/5_vc2msh.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780424840/6_rynyop.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780501371/7_mqw4nm.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780501371/9_awjexl.jpg" alt="Sample Shot"></div>
+        <div class="gallery-item" style="height:200px"><img src="https://res.cloudinary.com/dsolkw43h/image/upload/v1780501372/8_yz5mhr.jpg" alt="Sample Shot"></div>
+
       </div>
     </div>
   </section>
@@ -576,11 +576,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
           </div>
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFaq(this)">What if the camera gets damaged? <span>+</span></div>
-            <div class="faq-a">Accidents happen! The ₱500 security deposit covers minor wear. For significant damages, repairs will be discussed and billed accordingly. We handle it with understanding!</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq(this)">Is a deposit required? <span>+</span></div>
-            <div class="faq-a">Yes, a ₱500 refundable security deposit is required. This is returned in full when the camera is returned safely and in good condition.</div>
+            <div class="faq-a">Accidents happen! If there is significant damage, we'll discuss fair repair or replacement options. We focus on a friendly and flexible rental experience.</div>
           </div>
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFaq(this)">How do pickups and returns work? <span>+</span></div>
@@ -814,6 +810,8 @@ function setCamera(n){
 
 function isBooked(cam,d){
   return state.bookings[cam].some(b=>{
+    const status=b.status||'active';
+    if(status!=='active') return false;
     const dd=new Date(d);dd.setHours(0,0,0,0);
     const f=new Date(b.from);f.setHours(0,0,0,0);
     const t=new Date(b.to);t.setHours(0,0,0,0);
@@ -963,9 +961,9 @@ function renderDatePicker(which) {
   const daysInMonth = new Date(cs.year, cs.month+1, 0).getDate();
   const startDay = d1.getDay();
   let html = `<div class="dp-header">
-    <button class="dp-nav" onclick="dpPrev('${which}')">‹</button>
+    <button type="button" class="dp-nav" onclick="dpPrev('${which}')">‹</button>
     <span class="dp-month">${MONTHS[cs.month]} ${cs.year}</span>
-    <button class="dp-nav" onclick="dpNext('${which}')">›</button>
+    <button type="button" class="dp-nav" onclick="dpNext('${which}')">›</button>
   </div><div class="dp-grid">`;
   DAYS.forEach(d => html += `<div class="dp-label">${d}</div>`);
   for (let i = 0; i < startDay; i++) html += `<div class="dp-day dp-empty"></div>`;
@@ -985,7 +983,7 @@ function renderDatePicker(which) {
     }
     if (isToday) cls += ' dp-today';
     const disabled = isPast || isBooked_;
-    html += `<button class="${cls}" ${disabled?'disabled':''} onclick="selectDate('${which}','${dateStr}',${d})">${d}</button>`;
+    html += `<button type="button" class="${cls}" ${disabled?'disabled':''} onclick="selectDate('${which}','${dateStr}',${d})">${d}</button>`;
   }
   html += `</div>`;
   document.getElementById(which+'-picker').innerHTML = html;
@@ -1029,7 +1027,7 @@ function updatePricePreview() {
   if (p && r) {
     const days = Math.ceil((new Date(r) - new Date(p)) / (1000*60*60*24));
     if (days > 0) {
-      let price = days === 1 ? 269 : days <= 3 ? 799 : days <= 7 ? 1399 : days * 269;
+      let price = days <= 3 ? days * 269 : days <= 6 ? days * 239 : days * 199;
       document.getElementById('price-total').textContent = '₱' + price.toLocaleString();
       document.getElementById('price-preview').style.display = 'block';
     }
