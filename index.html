@@ -186,6 +186,29 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
 .modal-close{position:absolute;top:1rem;right:1rem;background:var(--pink);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;font-weight:900;color:var(--hot-pink)}
 .modal-box h3{font-family:'Pacifico',cursive;color:var(--hot-pink);margin-bottom:1.5rem;font-size:1.3rem}
 
+/* CUSTOM DATE PICKER */
+.date-picker-wrap{position:relative}
+.date-display{display:flex;align-items:center;gap:0.6rem;width:100%;padding:0.7rem 1rem;border:2px solid var(--rose);border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.9rem;color:var(--muted);background:var(--cream);cursor:pointer;transition:border-color 0.2s;user-select:none}
+.date-display:hover,.date-display.active{border-color:var(--hot-pink)}
+.date-display.has-value{color:var(--text);font-weight:700}
+.date-display-icon{font-size:1rem}
+.date-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:300;background:white;border-radius:20px;padding:1.2rem;box-shadow:0 8px 40px rgba(233,30,140,0.2);border:2px solid var(--rose);min-width:300px}
+.date-picker-dropdown.open{display:block}
+.dp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.dp-month{font-weight:900;color:var(--text);font-size:0.95rem}
+.dp-nav{background:var(--pink);border:none;border-radius:50%;width:28px;height:28px;font-size:1rem;color:var(--hot-pink);cursor:pointer;transition:background 0.2s;line-height:1}
+.dp-nav:hover{background:var(--rose)}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dp-label{text-align:center;font-size:0.68rem;font-weight:800;color:var(--muted);padding:3px 0}
+.dp-day{text-align:center;padding:6px 3px;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.15s;border:none;background:transparent;width:100%}
+.dp-day:hover:not(.dp-booked):not(.dp-past):not(.dp-empty){background:var(--pink);color:var(--hot-pink)}
+.dp-day.dp-booked{background:var(--rose);color:white;cursor:not-allowed;text-decoration:line-through}
+.dp-day.dp-selected{background:var(--hot-pink);color:white}
+.dp-day.dp-in-range{background:var(--pink);color:var(--hot-pink)}
+.dp-day.dp-past{color:#ccc;cursor:not-allowed}
+.dp-day.dp-empty{pointer-events:none}
+.dp-day.dp-today{border:2px solid var(--deep-pink)}
+
 /* RESPONSIVE */
 @media(max-width:768px){
   .hero-inner{grid-template-columns:1fr}
@@ -441,11 +464,25 @@ footer{background:var(--text);color:rgba(255,255,255,0.85);padding:3rem 2rem}
           <div class="form-grid">
             <div class="form-row">
               <label>Pickup Date *</label>
-              <input type="date" required id="pickup-date">
+              <div class="date-picker-wrap" id="pickup-wrap">
+                <div class="date-display" id="pickup-display" onclick="toggleDatePicker('pickup')">
+                  <span class="date-display-icon">🗓</span>
+                  <span id="pickup-display-text">Select pickup date</span>
+                </div>
+                <input type="hidden" id="pickup-date" required>
+                <div class="date-picker-dropdown" id="pickup-picker"></div>
+              </div>
             </div>
             <div class="form-row">
               <label>Return Date *</label>
-              <input type="date" required id="return-date">
+              <div class="date-picker-wrap" id="return-wrap">
+                <div class="date-display" id="return-display" onclick="toggleDatePicker('return')">
+                  <span class="date-display-icon">🗓</span>
+                  <span id="return-display-text">Select return date</span>
+                </div>
+                <input type="hidden" id="return-date" required>
+                <div class="date-picker-dropdown" id="return-picker"></div>
+              </div>
             </div>
           </div>
           <div class="form-row" id="price-preview" style="background:linear-gradient(135deg,var(--pink),var(--rose));border-radius:12px;padding:1rem;display:none;text-align:center">
@@ -889,19 +926,125 @@ function resetBooking(){
   document.getElementById('price-preview').style.display='none';
 }
 
-document.addEventListener('change',function(e){
-  if(e.target.id==='pickup-date'||e.target.id==='return-date'){
-    const p=document.getElementById('pickup-date').value;
-    const r=document.getElementById('return-date').value;
-    if(p&&r){
-      const days=Math.ceil((new Date(r)-new Date(p))/(1000*60*60*24));
-      if(days>0){
-        let price=days===1?269:days<=3?799:days<=7?1399:days*269;
-        document.getElementById('price-total').textContent='₱'+price.toLocaleString();
-        document.getElementById('price-preview').style.display='block';
-      }
+// ── Custom Pink Date Picker ──
+const dpState = {
+  pickup: { month: new Date().getMonth(), year: new Date().getFullYear() },
+  return: { month: new Date().getMonth(), year: new Date().getFullYear() }
+};
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+function toggleDatePicker(which) {
+  const other = which === 'pickup' ? 'return' : 'pickup';
+  document.getElementById(other+'-picker').classList.remove('open');
+  document.getElementById(other+'-display').classList.remove('active');
+  const picker = document.getElementById(which+'-picker');
+  const display = document.getElementById(which+'-display');
+  const isOpen = picker.classList.contains('open');
+  if (isOpen) {
+    picker.classList.remove('open');
+    display.classList.remove('active');
+  } else {
+    renderDatePicker(which);
+    picker.classList.add('open');
+    display.classList.add('active');
+  }
+}
+
+function renderDatePicker(which) {
+  const cs = dpState[which];
+  const cam = parseInt(document.getElementById('cam-select').value) || 1;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const pickupVal = document.getElementById('pickup-date').value;
+  const returnVal = document.getElementById('return-date').value;
+  const pickupDate = pickupVal ? new Date(pickupVal+'T00:00:00') : null;
+  const returnDate = returnVal ? new Date(returnVal+'T00:00:00') : null;
+  const d1 = new Date(cs.year, cs.month, 1);
+  const daysInMonth = new Date(cs.year, cs.month+1, 0).getDate();
+  const startDay = d1.getDay();
+  let html = `<div class="dp-header">
+    <button class="dp-nav" onclick="dpPrev('${which}')">‹</button>
+    <span class="dp-month">${MONTHS[cs.month]} ${cs.year}</span>
+    <button class="dp-nav" onclick="dpNext('${which}')">›</button>
+  </div><div class="dp-grid">`;
+  DAYS.forEach(d => html += `<div class="dp-label">${d}</div>`);
+  for (let i = 0; i < startDay; i++) html += `<div class="dp-day dp-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(cs.year, cs.month, d);
+    const isPast = date < today;
+    const isBooked_ = isBooked(cam, date);
+    const isToday = date.getTime() === today.getTime();
+    const dateStr = `${cs.year}-${String(cs.month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let cls = 'dp-day';
+    if (isPast) cls += ' dp-past';
+    else if (isBooked_) cls += ' dp-booked';
+    else {
+      if (which === 'pickup' && pickupVal === dateStr) cls += ' dp-selected';
+      else if (which === 'return' && returnVal === dateStr) cls += ' dp-selected';
+      else if (pickupDate && returnDate && date > pickupDate && date < returnDate) cls += ' dp-in-range';
+    }
+    if (isToday) cls += ' dp-today';
+    const disabled = isPast || isBooked_;
+    html += `<button class="${cls}" ${disabled?'disabled':''} onclick="selectDate('${which}','${dateStr}',${d})">${d}</button>`;
+  }
+  html += `</div>`;
+  document.getElementById(which+'-picker').innerHTML = html;
+}
+
+function selectDate(which, dateStr, d) {
+  document.getElementById(which+'-date').value = dateStr;
+  const date = new Date(dateStr+'T00:00:00');
+  const formatted = date.toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' });
+  const display = document.getElementById(which+'-display-text');
+  display.textContent = formatted;
+  document.getElementById(which+'-display').classList.add('has-value');
+  document.getElementById(which+'-picker').classList.remove('open');
+  document.getElementById(which+'-display').classList.remove('active');
+  // If pickup selected, auto-open return
+  if (which === 'pickup') {
+    const returnVal = document.getElementById('return-date').value;
+    if (!returnVal) {
+      dpState.return.month = dpState.pickup.month;
+      dpState.return.year = dpState.pickup.year;
+      setTimeout(() => toggleDatePicker('return'), 150);
     }
   }
+  updatePricePreview();
+}
+
+function dpPrev(which) {
+  dpState[which].month--;
+  if (dpState[which].month < 0) { dpState[which].month = 11; dpState[which].year--; }
+  renderDatePicker(which);
+}
+function dpNext(which) {
+  dpState[which].month++;
+  if (dpState[which].month > 11) { dpState[which].month = 0; dpState[which].year++; }
+  renderDatePicker(which);
+}
+
+function updatePricePreview() {
+  const p = document.getElementById('pickup-date').value;
+  const r = document.getElementById('return-date').value;
+  if (p && r) {
+    const days = Math.ceil((new Date(r) - new Date(p)) / (1000*60*60*24));
+    if (days > 0) {
+      let price = days === 1 ? 269 : days <= 3 ? 799 : days <= 7 ? 1399 : days * 269;
+      document.getElementById('price-total').textContent = '₱' + price.toLocaleString();
+      document.getElementById('price-preview').style.display = 'block';
+    }
+  }
+}
+
+// Close pickers when clicking outside
+document.addEventListener('click', function(e) {
+  ['pickup','return'].forEach(which => {
+    const wrap = document.getElementById(which+'-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById(which+'-picker').classList.remove('open');
+      document.getElementById(which+'-display').classList.remove('active');
+    }
+  });
 });
 
 function toggleFaq(el){
