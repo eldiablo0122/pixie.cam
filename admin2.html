@@ -89,18 +89,6 @@ button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;background:non
       <div class="stat-mini"><div class="num" id="stat-active">1</div><div class="lbl">Active Rentals</div></div>
       <div class="stat-mini"><div class="num">2</div><div class="lbl">Cameras in Fleet</div></div>
       <div class="admin-card" style="margin-top:1rem">
-        <h3>&#x26A1; n8n Webhook</h3>
-        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.6rem">Fires automatically when a booking is set to <strong>Active (Confirmed)</strong>.</div>
-        <div class="form-row" style="margin-bottom:0.5rem">
-          <label style="font-size:0.75rem">Webhook URL</label>
-          <input type="url" id="n8n-webhook-url" placeholder="https://your-n8n.com/webhook/..." style="font-size:0.78rem;padding:0.5rem 0.75rem">
-        </div>
-        <button class="btn-sm primary" style="width:100%;font-size:0.78rem;margin-bottom:0.4rem" onclick="saveWebhookUrl()">&#x1F4BE; Save URL</button>
-        <button class="btn-sm" style="width:100%;font-size:0.78rem;border:2px solid var(--rose);color:var(--muted)" onclick="testWebhook()">&#x1F9EA; Test Webhook</button>
-        <div id="webhook-status" style="margin-top:0.5rem;font-size:0.75rem;text-align:center;color:var(--muted)"></div>
-        <div id="webhook-log" style="margin-top:0.75rem;max-height:120px;overflow-y:auto;font-size:0.7rem;"></div>
-      </div>
-      <div class="admin-card" style="margin-top:1rem">
         <h3>ðŸ“… Mini Calendar</h3>
         <div id="admin-cal"></div>
       </div>
@@ -257,7 +245,6 @@ async function changeBookingStatus(btn){
   const cam=parseInt(row.getAttribute('data-cam'),10);
   const booking=state.bookings[cam].find(b=>String(b.id)===bookingId);
   if(booking){
-    const prevStatus = booking.status;
     if(booking.status==='pending') booking.status='active';
     else if(booking.status==='active') booking.status='done';
     else booking.status='active';
@@ -265,10 +252,6 @@ async function changeBookingStatus(btn){
       await updateBookingInFirebase({...booking, cam});
     } else {
       saveBookingsToStorage();
-    }
-    // Fire n8n webhook when booking is confirmed (set to active)
-    if(prevStatus !== 'active' && booking.status === 'active'){
-      await triggerN8nWebhook(booking, cam);
     }
     badge.className='status-badge '+booking.status;
     badge.textContent=booking.status.charAt(0).toUpperCase()+booking.status.slice(1);
@@ -346,107 +329,7 @@ function updateStats(){
   const activeCount=[...rows].filter(r=>r.querySelector('.status-badge').textContent==='Active').length;
   document.getElementById('stat-active').textContent=activeCount;
 }   
-
-// ── n8n Webhook Automation ──────────────────────────────────────────
-const N8N_KEY = 'pixie_n8n_webhook_url';
-
-function saveWebhookUrl() {
-  const url = document.getElementById('n8n-webhook-url').value.trim();
-  if (!url) { setWebhookStatus('⚠️ Please enter a webhook URL.', '#856404'); return; }
-  try { new URL(url); } catch { setWebhookStatus('⚠️ Invalid URL format.', '#856404'); return; }
-  localStorage.setItem(N8N_KEY, url);
-  setWebhookStatus('✅ URL saved!', '#155724');
-}
-
-function loadWebhookUrl() {
-  const saved = localStorage.getItem(N8N_KEY);
-  if (saved) {
-    const el = document.getElementById('n8n-webhook-url');
-    if (el) el.value = saved;
-  }
-}
-
-function setWebhookStatus(msg, color='var(--muted)') {
-  const el = document.getElementById('webhook-status');
-  if (el) { el.textContent = msg; el.style.color = color; }
-}
-
-function logWebhook(msg, success) {
-  const log = document.getElementById('webhook-log');
-  if (!log) return;
-  const entry = document.createElement('div');
-  const ts = new Date().toLocaleTimeString();
-  entry.style.cssText = `padding:3px 6px;border-radius:4px;margin-bottom:3px;background:${success?'#D4EDDA':'#F8D7DA'};color:${success?'#155724':'#721C24'}`;
-  entry.textContent = ts + ' — ' + msg;
-  log.prepend(entry);
-  // keep last 20 entries
-  while (log.children.length > 20) log.removeChild(log.lastChild);
-}
-
-function calcTotalPrice(from, to) {
-  const days = Math.max(1, Math.ceil((new Date(to) - new Date(from)) / (1000*60*60*24)));
-  if (days <= 3) return days * 269;
-  if (days <= 6) return days * 239;
-  return days * 199;
-}
-
-async function triggerN8nWebhook(booking, cam) {
-  const webhookUrl = localStorage.getItem(N8N_KEY);
-  if (!webhookUrl) {
-    logWebhook('Skipped — no webhook URL configured.', false);
-    return;
-  }
-
-  const camNames = { 1: 'Camera #1 (Kodak PixPro FZ55)', 2: 'Camera #2 (Kodak PixPro FZ55)' };
-  const totalPrice = calcTotalPrice(booking.from, booking.to);
-
-  const payload = {
-    booking_id:     booking.id || 'N/A',
-    customer_name:  booking.name || '',
-    customer_email: booking.email || '',
-    customer_phone: booking.phone || '',
-    pickup_date:    booking.from instanceof Date ? booking.from.toISOString().split('T')[0] : booking.from,
-    return_date:    booking.to   instanceof Date ? booking.to.toISOString().split('T')[0]   : booking.to,
-    camera_name:    camNames[cam] || `Camera #${cam}`,
-    total_price:    '₱' + totalPrice.toLocaleString(),
-    booking_status: 'Confirmed',
-    triggered_at:   new Date().toISOString()
-  };
-
-  setWebhookStatus('⏳ Sending…', 'var(--muted)');
-  try {
-    const res = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-      setWebhookStatus('✅ Webhook sent!', '#155724');
-      logWebhook(`Booking ${payload.booking_id} (${payload.customer_name}) → sent OK`, true);
-    } else {
-      throw new Error(`HTTP ${res.status}`);
-    }
-  } catch (err) {
-    setWebhookStatus('❌ Webhook failed: ' + err.message, '#721C24');
-    logWebhook(`Booking ${payload.booking_id} failed: ${err.message}`, false);
-  }
-}
-
-async function testWebhook() {
-  const dummy = {
-    id: 'TEST-001',
-    name: 'Test Customer',
-    email: 'test@pixie.cam',
-    phone: '+63 900 000 0000',
-    from: new Date(),
-    to: new Date(Date.now() + 3*86400000),
-    status: 'active'
-  };
-  await triggerN8nWebhook(dummy, 1);
-}
-// ────────────────────────────────────────────────────────────────────
-
-window.addEventListener('DOMContentLoaded',()=>{startBookingSync();loadWebhookUrl();});
+window.addEventListener('DOMContentLoaded',()=>{startBookingSync();});
 </script>
 </body>
 </html>

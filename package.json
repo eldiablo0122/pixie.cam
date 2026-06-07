@@ -1,0 +1,25 @@
+{
+  "name": "pixiecam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eldiablo0122/pixie.cam.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/eldiablo0122/pixie.cam/issues"
+  },
+  "homepage": "https://github.com/eldiablo0122/pixie.cam#readme",
+  "dependencies": {
+    "@dataconnect/generated": "file:src/dataconnect-generated",
+    "firebase": "^12.14.0"
+  }
+}
